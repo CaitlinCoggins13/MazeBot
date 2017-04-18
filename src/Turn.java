@@ -6,6 +6,7 @@ import lejos.robotics.subsumption.Behavior;
 public class Turn implements Behavior
 {
 	private ArcMoveController robot;
+	private boolean suppressed = false;
 	
 	public Turn(ArcMoveController r)
 	{
@@ -20,13 +21,13 @@ public class Turn implements Behavior
 
 	@Override
 	public void action() {
-		// turn left??????
+		suppressed = false;
 		((DifferentialPilot)robot).rotate(130);
 	}
 
 	@Override
 	public void suppress() {
-		robot.stop();
+		suppressed = true;
 	}
 
 	

@@ -15,24 +15,15 @@ public class SenseUltrasonic implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		/**
-		 * if(!robot.isMoving()||!suppressed) { suppressed = false; return true;
-		 * } return false;
-		 **/
-		// if current cell is unvisited, suppressed = false, return true
-		// TODO:
-		return false;
+		return sensor.getDistance()<10;
 	}
 
 	@Override
 	public void action() {
 		// cm??
-		if (suppressed == false) {
-			if (sensor.getDistance() < 10) {
-				// update map to show wall
-			}
-		}
-
+		suppressed = false;
+		// update map to show wall
+		// turn????
 	}
 
 	@Override
