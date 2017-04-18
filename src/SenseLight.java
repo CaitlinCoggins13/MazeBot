@@ -25,14 +25,18 @@ public class SenseLight implements Behavior
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-		// if the ground is above some percentage white, we are at the goal
-		// call whatever has plotted the path back to the start
+		if(light.getLightValue() > 70) //number???
+		{
+			// if the ground is above some percentage white, we are at the goal
+			// call whatever has plotted the path back to the start
+		}
+		
 	}
 
 	@Override
 	public void suppress() {
 		// TODO Auto-generated method stub
-		
+		//do not
 	}
 
 }
