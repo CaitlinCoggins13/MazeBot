@@ -12,6 +12,8 @@ import lejos.robotics.subsumption.Behavior;
 public class Robot {
 
 	static ArcMoveController robot = new DifferentialPilot(5.6f, 11.0f, Motor.A, Motor.C, true);
+	// TODO: do we know the starting location? If not, how do we find out the
+	// row and col of starting cell
 	static Cell currCell;
 	static int orientation = 0;
 	static UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S1);
