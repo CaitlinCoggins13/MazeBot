@@ -17,10 +17,11 @@ public class SenseUltrasonic implements Behavior {
 
 	@Override
 	public void action() {
-		// cm??
 		suppressed = false;
-		// update map to show wall
-		// turn????
+		Robot.turnLeft();
+		while (Robot.isMoving() || !suppressed) {
+			Thread.yield();
+		}
 	}
 
 	@Override

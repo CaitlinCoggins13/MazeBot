@@ -211,9 +211,8 @@ public class Robot {
 		Behavior b1 = new MoveForward();
 		Behavior b2 = new SenseUltrasonic();
 		Behavior b3 = new SenseLight();
-		Behavior b4 = new Turn();
 
-		Behavior[] bArray = { b3, b2, b4, b1 };
+		Behavior[] bArray = { b3, b2 , b1};
 
 		// create the arbitrator
 		Arbitrator arby = new Arbitrator(bArray);
