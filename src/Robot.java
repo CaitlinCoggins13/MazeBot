@@ -9,70 +9,89 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
+/**
+ * A robot with a light sensor and an Ultrasonic sensor.
+ * 
+ * @author yuhu
+ *
+ */
 public class Robot {
 
-	static ArcMoveController robot = new DifferentialPilot(5.6f, 11.0f, Motor.A, Motor.C, true);
+	private static ArcMoveController robot = new DifferentialPilot(5.6f, 11.0f, Motor.A, Motor.C, true);
 	// TODO: do we know the starting location? If not, how do we find out the
 	// row and col of starting cell
-	static Cell currCell;
-	static int orientation = 0;
-	static UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S1);
-	static LightSensor lSensor = new LightSensor(SensorPort.S3);
+	private static Cell currCell;
+	private static int orientation = 0;
+	public static UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S1);
+	public static LightSensor lSensor = new LightSensor(SensorPort.S3);
 
 	private static Stack<Cell> botPath = new Stack<Cell>();
 
-	public static void pushCellToPath(Cell c) {
-		botPath.push(c);
+	private static final int EAST = 0;
+	private static final int NORTH = 1;
+	private static final int WEST = 2;
+	private static final int SOUTH = 3;
+
+	/**
+	 * Check if the bot is moving.
+	 * 
+	 * @return return true if the bot is moving.
+	 */
+	public static boolean isMoving() {
+		return robot.isMoving();
 	}
 
-	public static Cell popCellFromPath() {
-		if (botPath.isEmpty()) {
-			return null;
-		}
-		return botPath.pop();
-	}
-
+	/**
+	 * Bot turn left and update orientation.
+	 * 
+	 */
 	public static void turnLeft() {
 		orientation = (orientation + 1) % 4;
-		rotate(130);
+		((DifferentialPilot) robot).rotate(130);
 	}
 
+	/**
+	 * Bot turn right and update orientation.
+	 */
 	public static void turnRight() {
 		orientation = (orientation - 1 + 4) % 4;
-		rotate(-130);
+		((DifferentialPilot) robot).rotate(-130);
 	}
 
-	public static void rotate(int i) {
-		((DifferentialPilot) robot).rotate(i);
-	}
-
-	public static void travel(int i) {
-		robot.travel(i);
-	}
-
+	/**
+	 * Bot go forward.
+	 */
 	public static void forward() {
-		travel(-8);
+		robot.travel(-8);
 	}
 
+	/**
+	 * Bot go backward.
+	 */
 	public static void backward() {
-		travel(8);
+		robot.travel(8);
 	}
 
+	/**
+	 * Check if the robot is walking within the maze
+	 * 
+	 * @return return false if the robot is going to fall out of the edge.
+	 */
 	public static boolean canMoveForward() {
 		int row = currCell.getRow();
 		int col = currCell.getCol();
-		if (orientation == 0) {
+		if (orientation == EAST) {
 			if (col + 1 >= 8)
 				return false;
 
-		} else if (orientation == 1) {
+		} else if (orientation == NORTH) {
 			if (row - 1 <= 0)
 				return false;
 
-		} else if (orientation == 2) {
+		} else if (orientation == WEST) {
 			if (col - 1 <= 0)
 				return false;
-		} else if (orientation == 3) {
+		} else if (orientation == SOUTH) {
 			if (row + 1 >= 5)
 				return false;
 
@@ -80,28 +99,36 @@ public class Robot {
 		return true;
 	}
 
-	public static int getOrientation() {
-		return orientation;
-	}
-
-	public static Cell getCurrCell() {
-		return currCell;
-	}
-
-	public static void setCurrCell(Cell c) {
-		currCell = c;
-
+	/**
+	 * Update the botPath.
+	 */
+	public static void updateCellPath() {
+		int row = currCell.getRow();
+		int col = currCell.getCol();
+		if (orientation == EAST) {
+			currCell = new Cell(row, col + 1);
+		} else if (orientation == NORTH) {
+			currCell = new Cell(row - 1, col);
+		} else if (orientation == WEST) {
+			currCell = new Cell(row, col - 1);
+		} else if (orientation == SOUTH) {
+			currCell = new Cell(row + 1, col);
+		}
+		botPath.push(currCell);
 	}
 
 	/**
 	 * light sensor method to detect goal cell
 	 * 
-	 * @return
+	 * @return return light value.
 	 */
 	public static int getLightValue() {
 		return lSensor.getLightValue();
 	}
 
+	/**
+	 * stop the robot
+	 */
 	public static void stop() {
 		Robot.stop();
 	}
@@ -111,9 +138,9 @@ public class Robot {
 	 * locations.
 	 **/
 	public static void returnToStart() {
-		Cell currentCell = Robot.popCellFromPath();
-		while (currentCell != null) {
-			Cell c = Robot.popCellFromPath();
+		Cell currentCell = botPath.pop();
+		while (currentCell != null && !botPath.isEmpty()) {
+			Cell c = botPath.pop();
 			int goalX = c.getRow();
 			int goalY = c.getCol();
 			// Figures out the direction the robot needs to move from the goal
@@ -169,9 +196,9 @@ public class Robot {
 	}
 
 	/**
-	 * ultra sensor method to detect wall
+	 * ultra sensor detect wall
 	 * 
-	 * @return
+	 * @return return distance to the wall.
 	 */
 	public static int getDistance() {
 		return uSensor.getDistance();
@@ -193,7 +220,5 @@ public class Robot {
 
 		arby.start();
 
-		// TODO: how to stop the arbitrator and start to return?
-		returnToStart();
 	}
 }

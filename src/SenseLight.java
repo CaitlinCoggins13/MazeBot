@@ -1,5 +1,11 @@
 import lejos.robotics.subsumption.Behavior;
 
+/**
+ * Sense light behavior detect the goal and call returnToStart method.
+ * 
+ * @author yuhu
+ *
+ */
 public class SenseLight implements Behavior {
 
 	private boolean suppressed = false;
@@ -15,6 +21,8 @@ public class SenseLight implements Behavior {
 		suppressed = false;
 		// we are at the goal
 		// call whatever has plotted the path back to the start
+		Robot.returnToStart();
+		System.exit(0);
 	}
 
 	@Override

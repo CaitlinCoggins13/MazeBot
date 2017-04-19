@@ -1,5 +1,11 @@
 import lejos.robotics.subsumption.Behavior;
 
+/**
+ * Sense ultrasonic is activated when wall is detected.
+ * 
+ * @author yuhu
+ *
+ */
 public class SenseUltrasonic implements Behavior {
 
 	private boolean suppressed = false;

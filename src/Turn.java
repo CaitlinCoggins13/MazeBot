@@ -13,8 +13,10 @@ public class Turn implements Behavior {
 	@Override
 	public void action() {
 		suppressed = false;
-		Robot.rotate(130);
 		Robot.turnLeft();
+		while (Robot.isMoving() || !suppressed) {
+			Thread.yield();
+		}
 	}
 
 	@Override

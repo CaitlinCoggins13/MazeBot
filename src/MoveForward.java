@@ -1,5 +1,12 @@
 import lejos.robotics.subsumption.Behavior;
 
+/**
+ * MoveForward is the default behavior that is not suppressed unless the robot
+ * is out of the edge or run into wall or get to goal.
+ * 
+ * @author yuhu
+ *
+ */
 public class MoveForward implements Behavior {
 
 	@Override
@@ -10,30 +17,11 @@ public class MoveForward implements Behavior {
 
 	@Override
 	public void action() {
-		Robot.travel(-8);
-		updatePath();
-	}
-
-	private void updatePath() {
-		int Orientation = Robot.getOrientation();
-		Cell currCell = Robot.getCurrCell();
-		int row = currCell.getRow();
-		int col = currCell.getCol();
-		Cell nextCell = null;
-		if (Orientation == 0) {
-			nextCell = new Cell(row, col + 1);
-			Robot.setCurrCell(nextCell);
-		} else if (Orientation == 1) {
-			nextCell = new Cell(row - 1, col);
-			Robot.setCurrCell(nextCell);
-		} else if (Orientation == 2) {
-			nextCell = new Cell(row, col - 1);
-			Robot.setCurrCell(nextCell);
-		} else if (Orientation == 3) {
-			nextCell = new Cell(row + 1, col);
-			Robot.setCurrCell(nextCell);
+		Robot.forward();
+		Robot.updateCellPath();
+		while (Robot.isMoving()) {
+			Thread.yield();
 		}
-		Robot.pushCellToPath(nextCell);
 	}
 
 	@Override
