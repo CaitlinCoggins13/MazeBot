@@ -33,7 +33,7 @@ public class MoveForward implements Behavior {
 			nextCell = new Cell(row + 1, col);
 			Robot.setCurrCell(nextCell);
 		}
-		Path.pushCell(nextCell);
+		Robot.pushCellToPath(nextCell);
 	}
 
 	@Override

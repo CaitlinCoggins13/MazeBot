@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -14,6 +16,19 @@ public class Robot {
 	static int orientation = 0;
 	static UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S1);
 	static LightSensor lSensor = new LightSensor(SensorPort.S3);
+
+	private static Stack<Cell> botPath = new Stack<Cell>();
+
+	public static void pushCellToPath(Cell c) {
+		botPath.push(c);
+	}
+
+	public static Cell popCellFromPath() {
+		if (botPath.isEmpty()) {
+			return null;
+		}
+		return botPath.pop();
+	}
 
 	public static void turnLeft() {
 		orientation = (orientation + 1) % 4;
@@ -94,9 +109,9 @@ public class Robot {
 	 * locations.
 	 **/
 	public static void returnToStart() {
-		Cell currentCell = Path.popCell();
+		Cell currentCell = Robot.popCellFromPath();
 		while (currentCell != null) {
-			Cell c = Path.popCell();
+			Cell c = Robot.popCellFromPath();
 			int goalX = c.getRow();
 			int goalY = c.getCol();
 			// Figures out the direction the robot needs to move from the goal
