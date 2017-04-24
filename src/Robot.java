@@ -3,6 +3,7 @@ import java.util.Stack;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.ArcMoveController;
 import lejos.robotics.navigation.DifferentialPilot;
@@ -20,11 +21,11 @@ public class Robot {
 	private static ArcMoveController robot = new DifferentialPilot(5.6f, 11.0f, Motor.A, Motor.C, true);
 	// TODO: do we know the starting location? If not, how do we find out the
 	// row and col of starting cell
-	private static Cell currCell;
+	public static Cell currCell = new Cell(0, 0);
 	private static int orientation = 0;
-	public static UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S1);
-	public static LightSensor lSensor = new LightSensor(SensorPort.S3);
-
+	public static UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S3);
+	public static LightSensor lSensor = new LightSensor(SensorPort.S4);
+	public static TouchSensor tSensor = new TouchSensor(SensorPort.S1);
 	private static Stack<Cell> botPath = new Stack<Cell>();
 
 	private static final int EAST = 0;
@@ -62,14 +63,14 @@ public class Robot {
 	 * Bot go forward.
 	 */
 	public static void forward() {
-		robot.travel(-8);
+		robot.travel(-20);
 	}
 
 	/**
 	 * Bot go backward.
 	 */
 	public static void backward() {
-		robot.travel(8);
+		robot.travel(20);
 	}
 
 	/**
@@ -204,6 +205,10 @@ public class Robot {
 		return uSensor.getDistance();
 	}
 
+	public static boolean touchWall() {
+		return tSensor.isPressed();
+	}
+
 	// array is here
 	public static void main(String[] args) {
 
@@ -212,7 +217,7 @@ public class Robot {
 		Behavior b2 = new SenseUltrasonic();
 		Behavior b3 = new SenseLight();
 
-		Behavior[] bArray = { b3, b2 , b1};
+		Behavior[] bArray = { b1, b3, b2 };
 
 		// create the arbitrator
 		Arbitrator arby = new Arbitrator(bArray);

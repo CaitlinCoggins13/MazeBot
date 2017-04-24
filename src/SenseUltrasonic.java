@@ -12,16 +12,18 @@ public class SenseUltrasonic implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return Robot.getDistance() < 10;
+		return Robot.touchWall();
 	}
 
 	@Override
 	public void action() {
 		suppressed = false;
 		Robot.turnLeft();
+		Robot.forward();
 		while (Robot.isMoving() || !suppressed) {
 			Thread.yield();
 		}
+
 	}
 
 	@Override

@@ -8,25 +8,47 @@ import lejos.robotics.subsumption.Behavior;
  *
  */
 public class MoveForward implements Behavior {
+	private boolean suppressed = false;
 
 	@Override
 	public boolean takeControl() {
 		// Stop moving forward if it's going to move out of bound.
-		return Robot.canMoveForward();
+		return true;
 	}
 
 	@Override
 	public void action() {
-		Robot.forward();
+		suppressed = false;
+		if (Robot.canMoveForward()) {
+			Robot.forward();
+		} else {
+			Robot.turnRight();
+			if (Robot.canMoveForward()) {
+				Robot.forward();
+			} else {
+				Robot.turnRight();
+				Robot.turnRight();
+				if (Robot.canMoveForward()) {
+					Robot.forward();
+				} else {
+					Robot.turnLeft();
+					Robot.forward();
+				}
+			}
+		}
 		Robot.updateCellPath();
-		while (Robot.isMoving()) {
+		if (Robot.currCell.getCol() == 7 && Robot.currCell.getRow() == 4) {
+			System.out.println("exit");
+			System.exit(0);
+		}
+		while (!suppressed || Robot.isMoving()) {
 			Thread.yield();
 		}
 	}
 
 	@Override
 	public void suppress() {
-		Robot.stop();
+		suppressed = true;
 	}
 
 }

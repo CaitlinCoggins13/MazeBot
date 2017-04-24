@@ -12,17 +12,15 @@ public class SenseLight implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return Robot.getLightValue() > 70;
+		return Robot.getLightValue() > 40;
 	}
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
 		suppressed = false;
 		// we are at the goal
 		// call whatever has plotted the path back to the start
-		Robot.returnToStart();
-		System.exit(0);
+		// Robot.returnToStart();
 	}
 
 	@Override
