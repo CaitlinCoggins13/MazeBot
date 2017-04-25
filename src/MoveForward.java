@@ -19,35 +19,37 @@ public class MoveForward implements Behavior {
 	@Override
 	public void action() {
 		suppressed = false;
-		if (Robot.canMoveForward()) {
-			Robot.forward();
-		} else {
-			Robot.turnRight();
+		
+		while (!suppressed || Robot.isMoving()) {
+			Thread.yield();
 			if (Robot.canMoveForward()) {
 				Robot.forward();
 			} else {
 				Robot.turnRight();
-				Robot.turnRight();
 				if (Robot.canMoveForward()) {
 					Robot.forward();
 				} else {
-					Robot.turnLeft();
-					Robot.forward();
+					Robot.turnRight();
+					Robot.turnRight();
+					if (Robot.canMoveForward()) {
+						Robot.forward();
+					} else {
+						Robot.turnLeft();
+						Robot.forward();
+					}
 				}
 			}
-		}
-		Robot.updateCellPath();
-		if (Robot.currCell.getCol() == 7 && Robot.currCell.getRow() == 4) {
-			System.out.println("exit");
-			System.exit(0);
-		}
-		while (!suppressed || Robot.isMoving()) {
-			Thread.yield();
+			Robot.updateCellPath();
+			if (Robot.currCell.getCol() == 7 && Robot.currCell.getRow() == 4) {
+				System.out.println("exit");
+				System.exit(0);
+			}
 		}
 	}
 
 	@Override
 	public void suppress() {
+		System.out.println("moving suppressed");
 		suppressed = true;
 	}
 

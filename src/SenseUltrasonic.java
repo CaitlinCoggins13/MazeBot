@@ -20,7 +20,7 @@ public class SenseUltrasonic implements Behavior {
 		suppressed = false;
 		Robot.turnLeft();
 		Robot.forward();
-		while (Robot.isMoving() || !suppressed) {
+		while (Robot.isMoving()) {
 			Thread.yield();
 		}
 
@@ -28,6 +28,7 @@ public class SenseUltrasonic implements Behavior {
 
 	@Override
 	public void suppress() {
+		System.out.println("bumper suppressed");
 		suppressed = true;
 	}
 
